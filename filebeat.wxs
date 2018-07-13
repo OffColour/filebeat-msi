@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+    <Product Name='Filebeat (Elastic)' Manufacturer='Elastic'
+        Id='69f79dfa-dce6-4310-b52e-e080ee2da178' 
+        UpgradeCode='4993d2eb-3756-4fec-819f-c9f5909ed329'
+        Language='1033' Codepage='1252' Version='6.3.1'>
+    <Package Id='*' Keywords='Installer' Description="Filebeat (Elastic)"
+        InstallerVersion ="200" Comments='Filebeat' Manufacturer='Elastic' Languages='1033' Compressed='yes' SummaryCodepage='1252' InstallScope="perMachine" Platform = "x64"  />
+    <Media Id='1' Cabinet='filebeat.cab' EmbedCab='yes' />
+
+    <!--<?define SourceDir = "..\source\" ?>-->
+
+
+     <!-- Upgrade logic -->
+      <!-- AllowSameVersionUpgrades -> Always upgrade, never allow two versions to be installed next to each other -->
+      <!-- AllowSameVersionUpgrades causes ICE61 which must be ignored -->
+      <MajorUpgrade DowngradeErrorMessage="New Installed" AllowSameVersionUpgrades="yes" />
+
+      <!-- Set properties for add/remove programs -->
+      <!--<Property Id="ARPPRODUCTICON" Value="Icon.exe" />-->
+      <Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />      <!-- Remove repair -->
+      <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />      <!-- Remove modify -->
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+        <Directory Id='ProgramFiles64Folder'>
+            <Directory Id='INSTALLLOCATION' Name='Filebeat'>
+                
+                <Component Id="filebeat_comp" Guid="*" Win64="yes">
+ 
+                     <File Source="$(sys.CURRENTDIR)source\filebeat.exe" Id="filebeatexe" Name ="filebeat.exe" KeyPath="yes" />
+ 
+                    <ServiceInstall Id="ServiceInstaller" Account="LocalSystem" Description="Filebeat" DisplayName="Filebeat" ErrorControl="normal"
+                                    Arguments = "-c &quot;c:\program files\filebeat\filebeat.yml&quot; -path.home &quot;c:\program files\filebeat&quot; -path.data &quot;C:\ProgramData\filebeat&quot; -path.logs &quot;C:\ProgramData\filebeat\logs&quot;"
+                                     LoadOrderGroup="NetworkProvider" Name="FilebeatSvc" Start="auto" Type="ownProcess" Vital="yes" />
+                     <ServiceControl Id="ServiceControl" Name="FilebeatSvc" Start="install" Stop="both" Remove="uninstall" />
+ 
+                  </Component>
+            </Directory>
+        </Directory>
+       <Component Id="RegValInstallLocation_comp" Guid="66b20ee1-3fb3-44de-b975-0ded9c3252c4">
+            <!-- Do NOT use the application's default registry key here, because THIS key will be removed on uninstall
+                 (important when installing a newer version, because that is uninstall followed by install) -->
+            <RegistryKey Root="HKLM" Key="Software\Elastic\InstalledProducts\Filebeat">
+               <RegistryValue Name="InstallLocation" Value="[INSTALLDIR]" Type="string" KeyPath="yes" />
+            </RegistryKey>
+         </Component>
+    </Directory>
+     <!-- Registry entries -->
+
+     <Feature Id="MainTree" Title="Filebeat" Level="1">
+      <Feature Id="MinimumFeature"
+               Title="Minimum" Absent="allow"
+               Description="Installs Minimum.txt"
+               Level="1">
+        <ComponentRef Id="filebeat_comp" />
+        <ComponentRef Id="RegValInstallLocation_comp" />
+        <ComponentGroupRef Id="FilebeatFiles" />
+      </Feature>
+    </Feature>
+         
+
+
+
+</Product>
+</Wix>
