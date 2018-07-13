@@ -19,7 +19,7 @@
       <!-- Set properties for add/remove programs -->
       <!--<Property Id="ARPPRODUCTICON" Value="Icon.exe" />-->
       <Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />      <!-- Remove repair -->
-      <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />      <!-- Remove modify -->
+      <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />      <!-- Remove modifvvyk -->
 
     <Directory Id="TARGETDIR" Name="SourceDir">
         <Directory Id='ProgramFiles64Folder'>
