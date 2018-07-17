@@ -11,7 +11,7 @@
 
 <xsl:template match="wix:Wix"> 
         <xsl:copy> 
-            <xsl:processing-instruction name="include">filebeat.wxi</xsl:processing-instruction> 
+            <xsl:processing-instruction name="include">..\filebeat.wxi</xsl:processing-instruction> 
             <xsl:apply-templates/> 
         </xsl:copy> 
     </xsl:template> 
