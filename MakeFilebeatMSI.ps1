@@ -20,9 +20,14 @@ Invoke-WebRequest -Uri $filebeatURL -OutFile $wixbuildpath$filebeatzipname
 Expand-Archive $wixbuildpath$filebeatzipname -DestinationPath $PSScriptRoot -Force
 Rename-Item -Path $PSScriptRoot'\'$zipfoldername -NewName "source"
 
+$newProductID = New-Guid
+$newProductID = $newProductID.ToString()
+$parts = $zipfoldername.split('-')
+$filebeatversion = $parts[1]
+
 
 start-process -filepath $wixbinpath"heat.exe" -ArgumentList "dir", $wixsourcefilespath, "-cg FilebeatFiles -gg -scom -sreg -sfrag -srd -dr INSTALLLOCATION  -var `"var.FilebeatFilesDir`" -t", $PSScriptRoot"\FragmentTransfom.xslt", "-out", $wixbuildpath"FilesFragment.wxs" -NoNewWindow -Wait
-start-process -filepath $wixbinpath"candle.exe" -ArgumentList "filebeat.wxs -arch x64 -out", $wixbuildpath -NoNewWindow -Wait
+start-process -filepath $wixbinpath"candle.exe" -ArgumentList "filebeat.wxs", "-dProductID=$newProductID", "-dVersion=$filebeatversion"," -arch x64 -out", $wixbuildpath -NoNewWindow -Wait
 start-process -filepath $wixbinpath"candle.exe" -ArgumentList $wixbuildpath"FilesFragment.wxs -arch x64 -out", $wixbuildpath -NoNewWindow -Wait
 start-process -filepath $wixbinpath"light.exe" -ArgumentList "-v", $wixbuildpath"filebeat.wixobj", $wixbuildpath"FilesFragment.wixobj", "-o",$wixbuildpath"filebeat.msi" -NoNewWindow -Wait
 

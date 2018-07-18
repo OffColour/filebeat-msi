@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='windows-1252'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
     <Product Name='Filebeat (Elastic)' Manufacturer='Elastic'
-        Id='69f79dfa-dce6-4310-b52e-e080ee2da178' 
+        Id="$(var.ProductID)"
         UpgradeCode='4993d2eb-3756-4fec-819f-c9f5909ed329'
-        Language='1033' Codepage='1252' Version='6.3.1'>
+        Language='1033' Codepage='1252' Version="$(var.Version)">
     <Package Id='*' Keywords='Installer' Description="Filebeat (Elastic)"
         InstallerVersion ="200" Comments='Filebeat' Manufacturer='Elastic' Languages='1033' Compressed='yes' SummaryCodepage='1252' InstallScope="perMachine" Platform = "x64"  />
     <Media Id='1' Cabinet='filebeat.cab' EmbedCab='yes' />
