@@ -4,6 +4,7 @@ WIX file to generate an MSI for Elastic Filebeat
 This is a first draft so take it as it is!
 
 Tools required
+
 Wix Tools
 
 
